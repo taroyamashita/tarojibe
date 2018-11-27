@@ -13,6 +13,7 @@ class MapComponent extends Component {
           showAllPathTypes: true,
           width: '100%',
           height: '600',
+          position: 'absolute',
           container: '.map',
           parseAllMaps: true,
           showAllImageMapLabels: true,
@@ -80,8 +81,8 @@ class MapComponent extends Component {
       render() {
         return (
               <div className="container">
+                
                 <div className="map"></div>
-                <p>Test Content </p> 
               </div>
               
         );

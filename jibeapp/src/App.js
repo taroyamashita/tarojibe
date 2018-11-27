@@ -86,10 +86,7 @@ class App extends Component {
   render() {
     return (
         <div className="App" >
-          
-          <MapComponent /> 
-          {/* <div className="mapContainer"/>
-          <div className="map"></div> */}
+          {/* <MapComponent /> */}
           <h1> example app </h1>
         </div>
     );
