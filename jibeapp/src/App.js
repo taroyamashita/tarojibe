@@ -4,10 +4,23 @@ import './App.css';
 import jmap from 'jmap.js';
 import MapUIKit from '@jibestream-dev/jmap-mapui-kit';
 import MapComponent from '/Users/jibestreamadmin/Desktop/git/tarojibe/jibeapp/src/components/MapComponent.jsx'
+import  TemplateContent  from './components/MapIndex.js';
 
 
+
+const style = {
+  width: "50%",
+  height: "600px"
+}
 
 class App extends Component {
+
+  componentDidMount(){
+    let doc = document.getElementById('test').contentWindow.document;
+    doc.open();
+    doc.write(TemplateContent.html);
+    doc.close();
+  }
 
   // componentDidMount(){
   //   const config = {
@@ -86,8 +99,12 @@ class App extends Component {
   render() {
     return (
         <div className="App" >
+          <h1> Example App </h1>
           {/* <MapComponent /> */}
-          <h1> example app </h1>
+          <iframe src="about:blank" id="test" style={style}>
+          </iframe>
+          
+          
         </div>
     );
   }
