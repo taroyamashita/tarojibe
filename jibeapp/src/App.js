@@ -18,7 +18,7 @@ class App extends Component {
   componentDidMount(){
     let doc = document.getElementById('test').contentWindow.document;
     doc.open();
-    doc.write(TemplateContent.html);
+    doc.write(TemplateContent());
     doc.close();
   }
 

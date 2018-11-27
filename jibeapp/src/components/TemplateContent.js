@@ -1,5 +1,5 @@
-const TemplateContent = {
-    html: `
+module.exports = (resources, code) =>(
+`
     <!DOCTYPE html>
     <html>
   <head>
@@ -74,6 +74,21 @@ const ui = new MapUIKit (control, { padding: [20, 20, 20, 20] })
 ui.renderFloorSelector();
 ui.renderZoomButtons();
 ui.renderSearch();
+
+console.log(control.enableLayerInteractivity);
+
+control.enableLayerInteractivity('Units', unit => {
+  console.log('hello?');
+  const waypoints = unit.meta.waypointIds || []
+  console.log(waypoints);
+  if(waypoints.length){
+    const wp = activeVenue.maps.getWaypointById(waypoints[0])
+    const destinations = control.getDestinationsFromShape(unit)
+    const dest = destinations.length ? destinations[0] : null
+
+
+  }
+})
 });
 
 // Create new jmap instance and show map
@@ -83,10 +98,9 @@ const jibestream = jmap.init(config);
     </script>
   </body>
 </html>
-    `
-}
+    `)
 
 
-export default TemplateContent;
+
 
     
