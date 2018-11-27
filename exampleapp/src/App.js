@@ -15,6 +15,7 @@ class App extends Component {
       showAllPathTypes: true,
       width: '100%',
       height: '600',
+      position: "relative",
       container: '.map',
       parseAllMaps: true,
       showAllImageMapLabels: true,
@@ -96,8 +97,10 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <h1> Example App </h1>
+        <h1> Example App 
         <div className="map"></div>
+        </h1>
+        
 
       </div>
     );
