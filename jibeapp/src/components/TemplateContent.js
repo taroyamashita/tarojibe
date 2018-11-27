@@ -68,11 +68,16 @@ var config = {
 
 jmap.dispatcher.subscribe('ready', function () {
 // Scale map out
-jibestream.control.setMapTransform(new jmap.Transform({ scale: 0.3 }));
+const { control, activeVenue } = jibestream
+const ui = new MapUIKit (control, { padding: [20, 20, 20, 20] })
+
+ui.renderFloorSelector();
+ui.renderZoomButtons();
+ui.renderSearch();
 });
 
 // Create new jmap instance and show map
-var jibestream = jmap.init(config);
+const jibestream = jmap.init(config);
 
       }
     </script>
