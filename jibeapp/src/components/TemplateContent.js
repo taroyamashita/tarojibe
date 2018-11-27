@@ -30,8 +30,9 @@ const TemplateContent = {
   <body>
     <div id="map" class="map"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/easing/EasePack.min.js"></script>
-    
-        <script src="https://cdn.jibestream.com/web/4.5.4/jmap.min.js"></script>
+    <script src="https://cdn.jibestream.com/web/4.5.4/jmap.min.js"></script>
+    <script src="https://cdn.jibestream.com/web/plugins/assetkit/v1.0.2/assetkit.js"></script>
+    <script src="https://cdn.jibestream.com/web/plugins/mapuikit/v1.0.1/mapuikit.js"></script>
         
     <script>
       // Auth creds
@@ -43,12 +44,26 @@ const TemplateContent = {
         'use strict';
 
 var config = {
-host: 'https://api.jibestream.com',
-auth: new jmap.core.Auth(clientId, clientSecret),
-customerId: 51,
-venueId: 443,
-showAllAmenities: true,
-showAllPathTypes: true
+    host: 'https://api.jibestream.com',
+    auth: new jmap.core.Auth(clientId, clientSecret),
+    customerId: 51,
+    venueId: 443,
+    showAllAmenities: true,
+    showAllPathTypes: true,
+    width: '100%',
+    height: '600',
+    position: 'absolute',
+    container: '.map',
+    parseAllMaps: true,
+    showAllImageMapLabels: true,
+    showAllTextMapLabels: true,
+    applyDisplayMode: true,
+    userLocationOptions: {
+      position: [2750, 2985],
+      pulseVisible: true,
+      width: 10,
+      confidencePercent: 0.5
+    }
 };
 
 jmap.dispatcher.subscribe('ready', function () {

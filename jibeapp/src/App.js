@@ -3,8 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import jmap from 'jmap.js';
 import MapUIKit from '@jibestream-dev/jmap-mapui-kit';
-import MapComponent from '/Users/jibestreamadmin/Desktop/git/tarojibe/jibeapp/src/components/MapComponent.jsx'
-import  TemplateContent  from './components/MapIndex.js';
+import MapComponent from '/Users/jibestreamadmin/Desktop/git/tarojibe/jibeapp/src/components/MapComponent.jsx';
+import  TemplateContent  from './components/TemplateContent.js';
 
 
 
@@ -45,45 +45,45 @@ class App extends Component {
   //     }
       
   //   }
-  //   jmap.dispatcher.subscribe('ready', ()=>{
-  //     const {control, activeVenue} = jibestream
-  //     const ui = new MapUIKit(control, {padding: [20, 20, 20, 20]})
+    // jmap.dispatcher.subscribe('ready', ()=>{
+    //   const {control, activeVenue} = jibestream
+    //   const ui = new MapUIKit(control, {padding: [20, 20, 20, 20]})
 
-  //     ui.renderFloorSelector();
-  //     ui.renderZoomButtons();
-  //     ui.renderSearch();
+    //   ui.renderFloorSelector();
+    //   ui.renderZoomButtons();
+    //   ui.renderSearch();
 
-  //     control.enableLayerInteractivity('Amenity-Icons', icon =>{
-  //       const wp = icon.meta.waypoint;
-  //       // Wayfind from user location to icon;
-  //       navigateToWayPoint(wp);
+    //   control.enableLayerInteractivity('Amenity-Icons', icon =>{
+    //     const wp = icon.meta.waypoint;
+    //     // Wayfind from user location to icon;
+    //     navigateToWayPoint(wp);
 
-  //     })
+    //   })
 
-  //     control.enableLayerInteractivity('Units', unit => {
-  //       // Remove highlight from all units;
-  //       control.resetAllUnitStyles(); 
-  //       const highlight = new jmap.Style({ fill: '#D0D0D0'});
-  //       control.styleShapes([unit], highlight)
+    //   control.enableLayerInteractivity('Units', unit => {
+    //     // Remove highlight from all units;
+    //     control.resetAllUnitStyles(); 
+    //     const highlight = new jmap.Style({ fill: '#D0D0D0'});
+    //     control.styleShapes([unit], highlight)
 
-  //       const waypoints = unit.meta.waypointIds || [];
-  //       if(waypoints.length){
-  //         const wp = activeVenue.maps.getWaypointById(waypoints[0])
-  //         const destinations = control.getDestinationsFromShape(unit);
-  //         const dest = destinations.length ? destinations[0]: null;
-  //         ui.renderPopup({
-  //           coordinates: wp.coordinates,
-  //           titleText: dest.name || 'Empty Unit',
-  //           subText: `Waypoint ID: ${wp.id}`,
-  //           showActionButton: true,
-  //           actionButtonText: 'Navigate Here',
-  //           actionButtonCallback: () => {
-  //             navigateToWayPoint(wp)
-  //           }
-  //         })
-  //       };
-  //     })
-  //   })
+    //     const waypoints = unit.meta.waypointIds || [];
+    //     if(waypoints.length){
+    //       const wp = activeVenue.maps.getWaypointById(waypoints[0])
+    //       const destinations = control.getDestinationsFromShape(unit);
+    //       const dest = destinations.length ? destinations[0]: null;
+    //       ui.renderPopup({
+    //         coordinates: wp.coordinates,
+    //         titleText: dest.name || 'Empty Unit',
+    //         subText: `Waypoint ID: ${wp.id}`,
+    //         showActionButton: true,
+    //         actionButtonText: 'Navigate Here',
+    //         actionButtonCallback: () => {
+    //           navigateToWayPoint(wp)
+    //         }
+    //       })
+    //     };
+    //   })
+    // })
   //   const navigateToWayPoint = wp => {
   //     const { control, activeVenue } = jibestream
   //     const coords = control.userLocation.position
@@ -101,8 +101,12 @@ class App extends Component {
         <div className="App" >
           <h1> Example App </h1>
           {/* <MapComponent /> */}
-          <iframe src="about:blank" id="test" style={style}>
-          </iframe>
+          <iframe src="about:blank" id="test" style={style}></iframe>
+          <form> 
+            <input /> 
+
+
+          </form>
           
           
         </div>
