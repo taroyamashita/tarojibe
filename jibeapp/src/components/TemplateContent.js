@@ -80,11 +80,19 @@ console.log(control.enableLayerInteractivity);
 control.enableLayerInteractivity('Units', unit => {
   console.log('hello?');
   const waypoints = unit.meta.waypointIds || []
-  console.log(waypoints);
   if(waypoints.length){
     const wp = activeVenue.maps.getWaypointById(waypoints[0])
     const destinations = control.getDestinationsFromShape(unit)
     const dest = destinations.length ? destinations[0] : null
+    ui.renderPopup({
+      coordinates: wp.cooordinates,
+      titleText: dest.name || 'empty unit',
+      subText: "WayPoint Id:" + wp.id,
+      showActionButton: true,
+      actionButtonText: 'Navigate here'
+    })
+
+
 
 
   }

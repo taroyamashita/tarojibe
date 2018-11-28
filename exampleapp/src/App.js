@@ -70,6 +70,7 @@ class App extends Component {
     })
     const navigateToWayPoint = wp => {
       const { control, activeVenue } = jibestream
+      console.log(activeVenue.destinations);
       const coords = control.userLocation.position
       const map = control.userLocation.map
       const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
@@ -77,29 +78,17 @@ class App extends Component {
       control.drawWayfindingPath(path)
       control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5}), 100)
     }
+
+    
     const jibestream = jmap.init(config);
+    
 
   }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <h1> Example App 
+        
         <div className="map"></div>
-        </h1>
         
 
       </div>
