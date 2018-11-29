@@ -62,6 +62,22 @@ class App extends Component {
 
       control.limitConcurrentPaths = false;
 
+      function animatePaths(paths) {
+        let i = 0
+        // Animate initial path
+        paths[i].animate(15)
+      
+        // Set loop to repeat animation
+        setInterval(() => {
+          if (++i === paths.length) i = 0
+          paths[i].animate(0.5)
+        }, 1000)
+      }
+
+      const paths = control.getShapesInLayer('Wayfinding-Path');
+      console.log(paths);
+      // animatePaths(paths);
+
       console.log(control.limitConcurrentPaths);
 
       const destinations = activeVenue.destinations.getAll();
@@ -128,6 +144,21 @@ class App extends Component {
       lastVisited = wp.coordinates;
       control.updateUserLocationPosition(wp.coordinates, 0, 2, alternateMap);
       control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
+      const paths = control.getShapesInLayer('Wayfinding-Path');
+      console.log(paths);
+
+      function animatePaths(paths) {
+        let i = 0
+        // Animate initial path
+        paths[i].animate(15)
+      
+        // Set loop to repeat animation
+        setInterval(() => {
+          if (++i === paths.length) i = 0
+          paths[i].animate(0.5)
+        }, 1000)
+      }
+      animatePaths(paths);
     }
 
  
