@@ -4,7 +4,25 @@ import jmap from 'jmap.js';
 import MapUIKit from '@jibestream-dev/jmap-mapui-kit';
 import MultiplePointMenu from './components/MutliplePointMenu.jsx';
 
+let lastVisited = [2750, 2985]
+
 class App extends Component {
+
+  constructor(props){
+    super(props)
+    this.state ={
+      activePaths: [],
+      lastVisited: [2750, 2985],
+      pathsToVisit: []
+    }
+
+  }
+
+
+
+  // Save paths on state; 
+  // render paths based on input
+  // complete 
   componentDidMount(){
     const config = {
       host: 'https://api.jibestream.com',
@@ -89,25 +107,21 @@ class App extends Component {
             actionButtonText: 'Navigate Here',
             actionButtonCallback: () => {
               navigateToWayPoint(wp)
-              // navigateToWayPoint(dest2);
             }
           })
         };
       })
     })
-    const lastVisited = [2750, 2985]
+
     const navigateToWayPoint = (wp, lasVisited) => {
       const { control, activeVenue } = jibestream;
       const coords = control.userLocation.position
       const map = control.userLocation.map
-      console.log(control);
       const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
       const mostRecentLocation = activeVenue.getClosestWaypointToCoordinatesOnMap(lastVisited, map);
       const path = control.wayfindBetweenWaypoints(mostRecentLocation, wp)
       control.drawWayfindingPath(path)
-      control.updateUserLocation(wp.coordinates, jibestream);
-      console.log('new Coords', wp.coordinates)
-      // lastVisited = wp.coordinates;
+      lastVisited = wp.coordinates;
       control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
     }
 
