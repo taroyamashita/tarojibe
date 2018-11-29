@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import jmap from 'jmap.js';
 import MapUIKit from '@jibestream-dev/jmap-mapui-kit';
-import MultiplePointMenu from './components/MutliplePointMenu.jsx'
+import MultiplePointMenu from './components/MutliplePointMenu.jsx';
 
 class App extends Component {
   componentDidMount(){
@@ -15,20 +14,19 @@ class App extends Component {
       showAllAmenities: true,
       showAllPathTypes: true,
       width: '100%',
-      height: '600',
+      height: '605',
       container: '.map',
       parseAllMaps: true,
       showAllImageMapLabels: true,
       showAllTextMapLabels: true,
       applyDisplayMode: true,
-      limitConcurrentPaths: false,
+      limitConcurrentPaths: 1,
       userLocationOptions: {
         position: [2750, 2985],
         pulseVisible: true,
         width: 10,
         confidencePercent: 0.5
-      }
-      
+      } 
     }
     jmap.dispatcher.subscribe('ready', ()=>{
       const {control, activeVenue} = jibestream
@@ -42,25 +40,29 @@ class App extends Component {
         const wp = icon.meta.waypoint;
         // Wayfind from user location to icon;
         navigateToWayPoint(wp);
-       
+      });
 
-      })
+      control.limitConcurrentPaths = false;
+
+      console.log(control.limitConcurrentPaths);
 
       const destinations = activeVenue.destinations.getAll();
       console.log(destinations);
       let testPoint1 = activeVenue.maps.getWaypointsByDestination(destinations[0])[0];
       let testPoint2 = activeVenue.maps.getWaypointsByDestination(destinations[destinations.length-1])[0];
       console.log('point 1 is', testPoint1, ' point 2 is ', testPoint2);
-      let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2);
+      let access= true;
+      let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2, access);
       control.drawWayfindingPath(testPath);
-      let destinationWaypoints = destinations.meta
-      console.log( 'destination Waypoints', destinationWaypoints)
-      let d1 = destinations[0];
-      let d2 = destinations[destinations.length -1];
-      console.log('d1 is', d1);
-      console.log('d2 is', d2);
-      console.log('controller', control);
-      console.log('activeVenue', activeVenue);
+      
+      let testPoint3 = activeVenue.maps.getWaypointById(145005);
+      let testPoint4 = activeVenue.maps.getWaypointById(145001);
+
+      let testPath2 = control.wayfindBetweenWaypoints(testPoint3, testPoint4, access);
+
+      control.drawWayfindingPath(testPath2);
+
+
 
       // control.drawWayfindingPath(w1,w2);
 
@@ -107,11 +109,13 @@ class App extends Component {
       let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2);
       console.log(testPath);
       control.drawWayfindingPath(testPath);
-      control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5}), 100)
+      control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
     }
 
-    
+ 
     const jibestream = jmap.init(config);
+    const  {control, activeVenue} = jibestream;
+    console.log(control);
     
 
   }
