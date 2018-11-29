@@ -19,8 +19,6 @@ class App extends Component {
   }
 
 
-
-  // Save paths on state; 
   // render paths based on input
   // complete 
   componentDidMount(){
@@ -48,11 +46,13 @@ class App extends Component {
     }
     jmap.dispatcher.subscribe('ready', ()=>{
       const {control, activeVenue} = jibestream
-      const ui = new MapUIKit(control, {padding: [20, 20, 20, 20]})
-      console.log(activeVenue.destinations);
+      const ui = new MapUIKit(control, {padding: [20, 20, 20, 20]});
       ui.renderFloorSelector();
       ui.renderZoomButtons();
       ui.renderSearch();
+
+      let names = activeVenue.destinations.getAll();
+      console.log(names[0].name);
 
       control.enableLayerInteractivity('Amenity-Icons', icon =>{
         const wp = icon.meta.waypoint;
@@ -68,33 +68,20 @@ class App extends Component {
       console.log(destinations[0]);
       let testPoint1 = activeVenue.maps.getWaypointsByDestination(destinations[0])[0];
       let testPoint2 = activeVenue.maps.getWaypointsByDestination(destinations[destinations.length-1])[0];
-      console.log('point 1 is', testPoint1, ' point 2 is ', testPoint2);
-      // let access= true;
-      // let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2, access);
-      // control.drawWayfindingPath(testPath);
-      
-      // let testPoint3 = activeVenue.maps.getWaypointById(145005);
-      // let testPoint4 = activeVenue.maps.getWaypointById(145001);
-
-      // let testPath2 = control.wayfindBetweenWaypoints(testPoint3, testPoint4, access);
-
-      // control.drawWayfindingPath(testPath2);
 
 
 
-      // control.drawWayfindingPath(w1,w2);
+      let map = control.currentMap; 
 
       control.enableLayerInteractivity('Units', unit => {
         // Remove highlight from all units;
-        // control.resetAllUnitStyles(); 
+        control.resetAllUnitStyles(); 
         const highlight = new jmap.Style({ fill: '#D0D0D0'});
         control.styleShapes([unit], highlight)
 
         const waypoints = unit.meta.waypointIds || [];
-        console.log( waypoints);
 
         if(waypoints.length){
-          console.log (waypoints);
           const wp = activeVenue.maps.getWaypointById(waypoints[0])
           const destinations = control.getDestinationsFromShape(unit);
           const dest = destinations.length ? destinations[0]: null;
@@ -120,8 +107,26 @@ class App extends Component {
       const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
       const mostRecentLocation = activeVenue.getClosestWaypointToCoordinatesOnMap(lastVisited, map);
       const path = control.wayfindBetweenWaypoints(mostRecentLocation, wp)
-      control.drawWayfindingPath(path)
+      
+      const alternateMap = control.currentMap; 
+      
+      // Generate random Color 
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+      let pathFill = getRandomColor();
+      let pathStyle = new jmap.Style({
+        stroke: pathFill,
+        strokeWidth: 3
+      })
+      control.drawWayfindingPath(path, pathStyle);
       lastVisited = wp.coordinates;
+      control.updateUserLocationPosition(wp.coordinates, 0, 2, alternateMap);
       control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
     }
 
@@ -135,7 +140,6 @@ class App extends Component {
       <div className="App">
         
         <div className="map"></div>
-        <MultiplePointMenu />
         
         
 
