@@ -47,20 +47,20 @@ class App extends Component {
       console.log(control.limitConcurrentPaths);
 
       const destinations = activeVenue.destinations.getAll();
-      console.log(destinations);
+      console.log(destinations[0]);
       let testPoint1 = activeVenue.maps.getWaypointsByDestination(destinations[0])[0];
       let testPoint2 = activeVenue.maps.getWaypointsByDestination(destinations[destinations.length-1])[0];
       console.log('point 1 is', testPoint1, ' point 2 is ', testPoint2);
-      let access= true;
-      let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2, access);
-      control.drawWayfindingPath(testPath);
+      // let access= true;
+      // let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2, access);
+      // control.drawWayfindingPath(testPath);
       
-      let testPoint3 = activeVenue.maps.getWaypointById(145005);
-      let testPoint4 = activeVenue.maps.getWaypointById(145001);
+      // let testPoint3 = activeVenue.maps.getWaypointById(145005);
+      // let testPoint4 = activeVenue.maps.getWaypointById(145001);
 
-      let testPath2 = control.wayfindBetweenWaypoints(testPoint3, testPoint4, access);
+      // let testPath2 = control.wayfindBetweenWaypoints(testPoint3, testPoint4, access);
 
-      control.drawWayfindingPath(testPath2);
+      // control.drawWayfindingPath(testPath2);
 
 
 
@@ -95,27 +95,24 @@ class App extends Component {
         };
       })
     })
-    const navigateToWayPoint = wp => {
+    const lastVisited = [2750, 2985]
+    const navigateToWayPoint = (wp, lasVisited) => {
       const { control, activeVenue } = jibestream;
       const coords = control.userLocation.position
       const map = control.userLocation.map
+      console.log(control);
       const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
-      const path = control.wayfindBetweenWaypoints(userLocationWp, wp)
+      const mostRecentLocation = activeVenue.getClosestWaypointToCoordinatesOnMap(lastVisited, map);
+      const path = control.wayfindBetweenWaypoints(mostRecentLocation, wp)
       control.drawWayfindingPath(path)
-      const destinations = activeVenue.destinations.getAll();
-      let testPoint1 = activeVenue.maps.getWaypointsByDestination(destinations[0])[0];
-      let testPoint2 = activeVenue.maps.getWaypointsByDestination(destinations[destinations.length-1])[0];
-      console.log('point 1 is', testPoint1, ' point 2 is ', testPoint2);
-      let testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2);
-      console.log(testPath);
-      control.drawWayfindingPath(testPath);
+      control.updateUserLocation(wp.coordinates, jibestream);
+      console.log('new Coords', wp.coordinates)
+      // lastVisited = wp.coordinates;
       control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
     }
 
  
     const jibestream = jmap.init(config);
-    const  {control, activeVenue} = jibestream;
-    console.log(control);
     
 
   }
