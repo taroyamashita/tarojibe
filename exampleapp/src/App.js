@@ -4,7 +4,8 @@ import jmap from 'jmap.js';
 import MapUIKit from '@jibestream-dev/jmap-mapui-kit';
 import MultiplePointMenu from './components/MutliplePointMenu.jsx';
 
-let lastVisited = [2750, 2985]
+let lastVisited = [2750, 2985];
+let stopCount = 1; 
 
 class App extends Component {
 
@@ -88,7 +89,82 @@ class App extends Component {
       const testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2);
 
       //control.drawWayfindingPath(testPath);
+  
 
+      let map = control.currentMap; 
+
+      control.enableLayerInteractivity('Units', unit => {
+        // Remove highlight from all units;
+        control.resetAllUnitStyles(); 
+        const highlight = new jmap.Style({ fill: '#D0D0D0'});
+        control.styleShapes([unit], highlight)
+
+        const waypoints = unit.meta.waypointIds || [];
+
+        if(waypoints.length){
+          const wp = activeVenue.maps.getWaypointById(waypoints[0])
+          const destinations = control.getDestinationsFromShape(unit);
+          const dest = destinations.length ? destinations[0]: null;
+    
+          ui.renderPopup({
+            coordinates: wp.coordinates,
+            titleText: dest.name || 'Empty Unit',
+            subText: `Waypoint ID: ${wp.id}`,
+            showActionButton: true,
+            actionButtonText: 'Navigate Here',
+            actionButtonCallback: () => {
+              navigateToWayPoint(wp);
+              stopCount++
+            }
+          })
+        };
+      })
+    })
+
+    const navigateToWayPoint = (wp, lasVisited) => {
+      const { control, activeVenue } = jibestream;
+      const coords = control.userLocation.position
+      const map = control.userLocation.map
+      const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
+      const mostRecentLocation = activeVenue.getClosestWaypointToCoordinatesOnMap(lastVisited, map);
+      const path = control.wayfindBetweenWaypoints(mostRecentLocation, wp)
+      
+      const alternateMap = control.currentMap; 
+      
+      // Generate random Color 
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+      let pathFill = getRandomColor();
+      let pathStyle = new jmap.Style({
+        stroke: pathFill,
+        strokeWidth: 5
+      })
+      // control.drawWayfindingPath(path, pathStyle);
+      drawPath(mostRecentLocation, wp);
+      lastVisited = wp.coordinates;
+      control.updateUserLocationPosition(wp.coordinates, 0, 2, alternateMap);
+      control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
+      const paths = control.getShapesInLayer('Wayfinding-Path');
+      console.log(paths);
+
+      function animatePaths1(paths) {
+        let i = 0
+        // Animate initial path
+        // paths[i].animate(15)
+      
+        // Set loop to repeat animation
+        setInterval(() => {
+          if (++i === paths.length) i = 0
+          paths[i].animate(1.5)
+        }, 2000)
+      } 
+      
       function drawPath(_from, _to) {
         const data = window.drawnPathData
         {}
@@ -111,8 +187,8 @@ class App extends Component {
       
         // Create start & end Icon
         const icons = {
-          start: new control.jungle.Icon({
-            url: './assets/start.png',
+          1: new control.jungle.Icon({
+            url: './assets/one.png',
             width: 50,
             height: 50,
             point: _from.coordinates,
@@ -120,8 +196,8 @@ class App extends Component {
             rotation: 0,
             name: 'start',
           }),
-          end: new control.jungle.Icon({
-            url: './assets/end.png',
+          2: new control.jungle.Icon({
+            url: './assets/two.png',
             width: 50,
             height: 50,
             point: _to.coordinates,
@@ -129,6 +205,33 @@ class App extends Component {
             rotation: 0,
             name: 'end',
           }),
+          3: new control.jungle.Icon({
+            url: './assets/three.png',
+            width: 50,
+            height: 50,
+            point: _to.coordinates,
+            rotateWithMap: true,
+            rotation: 0,
+            name: 'end',
+          }),
+          4: new control.jungle.Icon({
+            url: './assets/four.png',
+            width: 50,
+            height: 50,
+            point: _to.coordinates,
+            rotateWithMap: true,
+            rotation: 0,
+            name: 'end',
+          }), 
+          5: new control.jungle.Icon({
+            url: './assets/five.png',
+            width: 50,
+            height: 50,
+            point: _to.coordinates,
+            rotateWithMap: true,
+            rotation: 0,
+            name: 'end',
+          })
         }
       
         // Get the mapView objects to place icons on
@@ -144,10 +247,8 @@ class App extends Component {
         }
       
         // Add the icons to each layer
-        pathLayers.start.addIcon(icons.start)
-        pathLayers.end.addIcon(icons.end)
-
-        console.log(icons.start);
+        pathLayers.start.addIcon(icons[stopCount.toString()])
+        pathLayers.end.addIcon(icons[stopCount.toString()]);
       
         // Render the just added Icons
         control.renderCurrentMapView()
@@ -162,13 +263,14 @@ class App extends Component {
 
       function animatePaths(paths, pathLayers) {
         // Animate initial path
-        const path = paths[0]
+        const path = paths[paths.length -1]; 
         const pathLayer = pathLayers.start
         const pointData = path.getPointDataAtLength(0)
         const pathIcon = createPathIcon(pointData)
         pathLayer.addImage(pathIcon)
         animateIconOnPath(pathIcon, path)
-        control.renderCurrentMapView()
+        control.renderCurrentMapView();
+        
       }
       
       function animateIconOnPath(icon, path) {
@@ -201,81 +303,8 @@ class App extends Component {
       }
       
 
-      drawPath(testPoint1, testPoint2);
-  
-
-      let map = control.currentMap; 
-
-      control.enableLayerInteractivity('Units', unit => {
-        // Remove highlight from all units;
-        control.resetAllUnitStyles(); 
-        const highlight = new jmap.Style({ fill: '#D0D0D0'});
-        control.styleShapes([unit], highlight)
-
-        const waypoints = unit.meta.waypointIds || [];
-
-        if(waypoints.length){
-          const wp = activeVenue.maps.getWaypointById(waypoints[0])
-          const destinations = control.getDestinationsFromShape(unit);
-          const dest = destinations.length ? destinations[0]: null;
-    
-          ui.renderPopup({
-            coordinates: wp.coordinates,
-            titleText: dest.name || 'Empty Unit',
-            subText: `Waypoint ID: ${wp.id}`,
-            showActionButton: true,
-            actionButtonText: 'Navigate Here',
-            actionButtonCallback: () => {
-              navigateToWayPoint(wp)
-            }
-          })
-        };
-      })
-    })
-
-    const navigateToWayPoint = (wp, lasVisited) => {
-      const { control, activeVenue } = jibestream;
-      const coords = control.userLocation.position
-      const map = control.userLocation.map
-      const userLocationWp = activeVenue.getClosestWaypointToCoordinatesOnMap(coords, map)
-      const mostRecentLocation = activeVenue.getClosestWaypointToCoordinatesOnMap(lastVisited, map);
-      const path = control.wayfindBetweenWaypoints(mostRecentLocation, wp)
       
-      const alternateMap = control.currentMap; 
-      
-      // Generate random Color 
-      function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
-      let pathFill = getRandomColor();
-      let pathStyle = new jmap.Style({
-        stroke: pathFill,
-        strokeWidth: 3
-      })
-      control.drawWayfindingPath(path, pathStyle);
-      lastVisited = wp.coordinates;
-      control.updateUserLocationPosition(wp.coordinates, 0, 2, alternateMap);
-      control.zoomToPathOnMap(control.currentMap, new jmap.Animation({ duration: 1.5 }), 100)
-      const paths = control.getShapesInLayer('Wayfinding-Path');
-      console.log(paths);
-
-      function animatePaths(paths) {
-        let i = 0
-        // Animate initial path
-        // paths[i].animate(15)
-      
-        // Set loop to repeat animation
-        setInterval(() => {
-          if (++i === paths.length) i = 0
-          paths[i].animate(1.5)
-        }, 2000)
-      }
-      animatePaths(paths);
+      // animatePaths(paths);
     }
 
   
