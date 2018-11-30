@@ -85,7 +85,124 @@ class App extends Component {
       let testPoint1 = activeVenue.maps.getWaypointsByDestination(destinations[0])[0];
       let testPoint2 = activeVenue.maps.getWaypointsByDestination(destinations[destinations.length-1])[0];
 
+      const testPath = control.wayfindBetweenWaypoints(testPoint1, testPoint2);
 
+      //control.drawWayfindingPath(testPath);
+
+      function drawPath(_from, _to) {
+        const data = window.drawnPathData
+        {}
+      
+        // Calculate a wayfinding path
+        const path = control.wayfindBetweenWaypoints(_from, _to)
+        // Show first map on path
+        const startMap = jibestream.activeVenue.maps.getById(path[0].mapId)
+        control.showMap(startMap)
+      
+        // Create a style for the path
+        const pathStyle = new jmap.Style({
+          stroke: '#202020',
+          strokeOpacity: 0.8,
+          strokeWidth: 3,
+        })
+      
+        // Draw the path on the map
+        control.drawWayfindingPath(path, pathStyle)
+      
+        // Create start & end Icon
+        const icons = {
+          start: new control.jungle.Icon({
+            url: './assets/start.png',
+            width: 50,
+            height: 50,
+            point: _from.coordinates,
+            rotateWithMap: true,
+            rotation: 0,
+            name: 'start',
+          }),
+          end: new control.jungle.Icon({
+            url: './assets/end.png',
+            width: 50,
+            height: 50,
+            point: _to.coordinates,
+            rotateWithMap: true,
+            rotation: 0,
+            name: 'end',
+          }),
+        }
+      
+        // Get the mapView objects to place icons on
+        const mapViews = {
+          start: control.stage.getMapViewById(path[0].mapId),
+          end: control.stage.getMapViewById(path[path.length - 1].mapId),
+        }
+      
+        // Get the path layers on each map to place the icon
+        const pathLayers = {
+          start: mapViews.start.guaranteeMapLayer('Wayfinding-Path'),
+          end: mapViews.end.guaranteeMapLayer('Wayfinding-Path'),
+        }
+      
+        // Add the icons to each layer
+        pathLayers.start.addIcon(icons.start)
+        pathLayers.end.addIcon(icons.end)
+
+        console.log(icons.start);
+      
+        // Render the just added Icons
+        control.renderCurrentMapView()
+      
+        // Focus to the path
+        const paths = control.getShapesInLayer('Wayfinding-Path', startMap)
+        const bounds = control.getBoundsFromShapes(paths)
+        control.fitBoundsInView(bounds, new jmap.Animation({ duration: 1 }), 150)
+        animatePaths(paths, pathLayers);
+        // data.icons = icons
+      }
+
+      function animatePaths(paths, pathLayers) {
+        // Animate initial path
+        const path = paths[0]
+        const pathLayer = pathLayers.start
+        const pointData = path.getPointDataAtLength(0)
+        const pathIcon = createPathIcon(pointData)
+        pathLayer.addImage(pathIcon)
+        animateIconOnPath(pathIcon, path)
+        control.renderCurrentMapView()
+      }
+      
+      function animateIconOnPath(icon, path) {
+        // Animate Icon on Path
+        let position = 0
+        const animate = () => {
+          window.requestAnimationFrame(() => {
+            if (position > path.length) position = 0
+            const data = path.getPointDataAtLength(position++)
+            icon.setRotation(data.angle)
+            icon.setPoint(data.point)
+            animate()
+          })
+        }
+        animate()
+      }
+      
+      function createPathIcon(data) {
+        const size = 10
+        return new control.jungle.Image({
+          url: './assets/path-arrow.png',
+          point: data.point.map(p => p - (size / 2)),
+          width: size,
+          height: size,
+          rotation: data.angle,
+          visible: true,
+          scaleWithMap: true,
+          preserveAspectRatio: true,
+        })
+      }
+      
+
+      drawPath(testPoint1, testPoint2);
+  
 
       let map = control.currentMap; 
 
@@ -150,16 +267,18 @@ class App extends Component {
       function animatePaths(paths) {
         let i = 0
         // Animate initial path
-        paths[i].animate(15)
+        // paths[i].animate(15)
       
         // Set loop to repeat animation
         setInterval(() => {
           if (++i === paths.length) i = 0
-          paths[i].animate(0.5)
-        }, 1000)
+          paths[i].animate(1.5)
+        }, 2000)
       }
       animatePaths(paths);
     }
+
+  
 
  
     const jibestream = jmap.init(config);
