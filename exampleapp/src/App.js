@@ -53,8 +53,6 @@ class App extends Component {
       ui.renderSearch();
 
       let names = activeVenue.destinations.getAll();
-      console.log(names[0].name);
-
       control.enableLayerInteractivity('Amenity-Icons', icon =>{
         const wp = icon.meta.waypoint;
         // Wayfind from user location to icon;
@@ -248,6 +246,7 @@ class App extends Component {
       
         // Add the icons to each layer
         pathLayers.start.addIcon(icons[stopCount.toString()])
+        console.log(pathLayers);
         pathLayers.end.addIcon(icons[stopCount.toString()]);
       
         // Render the just added Icons
