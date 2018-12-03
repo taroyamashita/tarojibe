@@ -164,8 +164,6 @@ class App extends Component {
       } 
       
       function drawPath(_from, _to) {
-        const data = window.drawnPathData
-        {}
       
         // Calculate a wayfinding path
         const path = control.wayfindBetweenWaypoints(_from, _to)
@@ -245,9 +243,9 @@ class App extends Component {
         }
       
         // Add the icons to each layer
-        pathLayers.start.addIcon(icons[stopCount.toString()])
+        // pathLayers.start.addIcon(icons[stopCount.toString()])
         console.log(pathLayers);
-        pathLayers.end.addIcon(icons[stopCount.toString()]);
+        // pathLayers.end.addIcon(icons[stopCount.toString()]);
       
         // Render the just added Icons
         control.renderCurrentMapView()
